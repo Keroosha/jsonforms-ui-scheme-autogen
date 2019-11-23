@@ -6,11 +6,6 @@ export type JsonFormsDynamicProps<T> = {
   onChange?: (data: T) => void;
 };
 
-export type JsonFormsDynamicState<T> = {
-  data: T;
-  schema: JsonSchema;
-};
-
 export type TestData = {
   testBool: boolean;
   test: number;

@@ -2,7 +2,7 @@ import React from 'react';
 import { JsonSchema } from '@jsonforms/core';
 import { JsonForms } from '@jsonforms/react';
 import { materialRenderers } from '@jsonforms/material-renderers';
-import { JsonFormsDynamicProps, JsonFormsDynamicState } from '../types';
+import { JsonFormsDynamicProps } from '../types';
 import { uiSchemeStrategyGenerator } from '../Generator';
 
 const emptySchema: JsonSchema = {
@@ -11,32 +11,21 @@ const emptySchema: JsonSchema = {
   required: [],
 };
 
-export class JsonFormsDynamic<T extends unknown> extends React.Component<
-  JsonFormsDynamicProps<T>,
-  JsonFormsDynamicState<T>
-> {
-  constructor(props: JsonFormsDynamicProps<T>) {
-    super(props);
-    const { schema, data } = this.props;
-    this.state = { data, schema: schema || emptySchema };
-  }
+export const JsonFormsDynamic = <T extends unknown>(props: JsonFormsDynamicProps<T>) => {
+  const { onChange, data, schema } = props;
 
-  render() {
-    const { onChange, data, schema } = this.props;
+  const schemaTemplate = schema || emptySchema;
+  const uiSchema = uiSchemeStrategyGenerator({ schemaTemplate });
 
-    const schemaTemplate = schema || emptySchema;
-    const uiSchema = uiSchemeStrategyGenerator({ schemaTemplate });
-
-    return (
-      <>
-        <JsonForms
-          data={data}
-          uischema={uiSchema}
-          schema={schemaTemplate}
-          renderers={materialRenderers}
-          onChange={({ data: newData }) => onChange && onChange(newData)}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <JsonForms
+        data={data}
+        uischema={uiSchema}
+        schema={schemaTemplate}
+        renderers={materialRenderers}
+        onChange={({ data: newData }) => onChange && onChange(newData)}
+      />
+    </>
+  );
+};
